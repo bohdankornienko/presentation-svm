@@ -6,7 +6,7 @@
 
 		<title>Regularization, Model Selection, Troubleshooting</title>
 
-		<meta name="description" content="A presentation about model selection, regularization, and troubleshooting of machine learning moels">
+		<meta name="description" content="A presentation about Support Vector Machines">
 		<meta name="author" content="Bohdan Kornienko">
 
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -105,9 +105,7 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
                 <section>
-                    <h1>Regularization</h1>
-                    <h1>Model Selection</h1>
-                    <h1>Troubleshooting</h1>
+                    <h1>Support Vector Machines</h1>
                 </section>
 
                 <section>
@@ -123,11 +121,11 @@
                 <section>
                     <section>
                         <h1>The Problem</h1>
-                        <p>Let’s say we want to solve the housing pricing problem.</p>
-                        <p>I.e. using the <b>set of features</b> we want to predict house <b>price</b>.</p>
+                        <p>Let’s say we want to solve the housing selling problem.</p>
+                        <p>I.e. using the <b>set of features</b> we want to predict whether house will be <b>sold or not</b>.</p>
                     </section>
                     <section>
-                        <p>The features might be:</p>
+                        <p>The features might be:</p>   
                         <ul>
                             <li>House size (area)</li>
                             <li>Number of rooms</li>
@@ -138,10 +136,125 @@
                 </section>
 
                 <section>
-                    <section>
+                    <img class="stretch" src="images/liner-separable-base.png">
+                </section>
+
+                <section>
                         <h1>Approach</h1>
-                        <p>One way to solve the broblem is to use<br><b>Linear regression</b></p>
+                        <p>One way to solve the broblem is to use<br><b>Logistic regression</b></p>
+                </section>
+
+                <section>
+                    <h1>How probably Logistic Regression will work</h1>
+                    <!-- TODO: join images into one -->
+                    <img width="31%" src="images/liner-separable-db-1.png">
+                    <img width="31%" src="images/liner-separable-db-2.png">
+                    <img width="31%" src="images/liner-separable-db-3.png">
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Is it good for us?</h1>
                     </section>
+
+                    <section>
+                        <img class="stretch" src="images/liner-separable-lr-db-test.png">
+                    </section>
+                    <section>
+                        <img class="stretch" src="images/liner-separable-lr-db-test-2.png">
+                    </section>
+                </section>
+
+                <section>
+                    <img class="stretch" src="images/liner-separable-lr-db-options.png">
+                </section>
+
+                <section>
+                    <h1>Intuition</h1>
+                    <img class="stretch" src="images/liner-separable-lr-db-best-split.png">
+                </section>
+
+                <section>
+                    <h1>The SVM</h1>
+                    <img class="stretch" src="images/liner-separable-lr-db-svm.png">
+                </section>
+
+                <section>
+                    <img class="stretch" src="images/liner-separable-lr-db-svm-margin.png">
+                </section>
+
+                <section>
+                    <h1>Support Vectors</h1>    
+                    <img class="stretch" src="images/liner-separable-lr-db-svm-gammas.png">
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Definitions</h1>
+                        <img class="stretch" src="images/liner-separable-lr-db-svm-clear.png">
+                        
+                        <script type="math/tex; mode=display">
+                            w^T x + b = 0, y \in \{-1, +1\}
+                        </script>
+                    </section>
+
+                    <section>
+                        <h1>Gamma +1</h1>
+                        <img class="stretch" src="images/liner-separable-lr-db-svm-gammas.png">
+                        
+                        <script type="math/tex; mode=display">
+                            \gamma^{(i)} = \left(\frac{w}{||w||}\right)^T x^{(i)} + \frac{b}{||w||}
+                        </script>
+                    </section>
+
+                    <section>
+                        <h1>Gamma -1</h1>
+                        <img class="stretch" src="images/liner-separable-lr-db-svm-gammas.png">
+                        
+                        <script type="math/tex; mode=display">
+                            \DeclareMathOperator*{\argmax}{argmax}
+                            \gamma^{(i)} = y^{(i)}\left(\left(\frac{w}{||w||}\right)^T x^{(i)} + \frac{b}{||w||}\right)
+                        </script>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Objective</h1>
+                        <script type="math/tex; mode=display">
+                            \argmax_{\gamma, w, b} \gamma
+                        </script>
+                        <p>Constraints:</p>
+                        <script type="math/tex; mode=display">
+                                y^{(i)}(w^T x^{(i)} + b) \ge \gamma, \;\;\;i = 1,..,m \\
+                                ||w|| = 1
+                        </script>
+                    </section>
+
+                    <section>
+                        <h1>Objective as minimization</h1>
+                        <script type="math/tex; mode=display">
+                            \DeclareMathOperator*{\argmin}{argmin}
+                            \argmin_{\gamma, w, b} \frac{1}{2} ||w||^2
+                        </script>
+                        <p>Constraints:</p>
+                        <script type="math/tex; mode=display">
+                                y^{(i)}(w^T x^{(i)} + b) \ge 1, \;\;\;i = 1,..,m \\
+                        </script>
+                    </section>
+                </section>
+
+                <section>
+                    <h1>Hard-margin</h1>
+                    <img class="stretch" src="images/liner-separable-lr-db-svm-clear.png">
+                </section>
+
+                <section>
+                    <h1>Stop here</h1>
+                </section>
+
+                <section>
+                    
                     <section>
                         <script type="math/tex; mode=display">
                         \hat{y} = \hat{\beta_0} + \hat{\beta_1} x_1 + \hat{\beta_2} x_2 + ... + \hat{\beta_p} x_p
