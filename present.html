@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Regularization, Model Selection, Troubleshooting</title>
+
+		<meta name="description" content="A presentation about model selection, regularization, and troubleshooting of machine learning moels">
+		<meta name="author" content="Bohdan Kornienko">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="reveal_js/css/reset.css">
+		<link rel="stylesheet" href="reveal_js/css/reveal.css">
+		<link rel="stylesheet" href="reveal_js/css/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="reveal_js/lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal_js/css/print/pdf.css' : 'reveal_js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+        <style type="text/css">
+            .reveal h1 {
+                font-size: larger;
+            }
+
+            .reveal h2 {
+                font-size: smaller;
+                text-transform: none;
+            }
+
+            div.block {
+                border: 1px solid white;
+                border-radius: 10px;
+                margin: 10px;
+                display: inline-block;
+                padding: 5px;
+                padding-left: 10px;
+                padding-right: 10px;
+                background-color: rgba(0,0,0, 0.2);
+
+            }
+            .reveal blockquote {
+                width: 100%;
+            }
+
+            .reveal blockquote span.author {
+                position: relative;
+                display: block;
+                font-size: smaller;
+                text-align: right;
+                margin-top: 5px;
+                color: #999;
+
+                i {
+                    position: relative;
+                    background: #eee;
+                    padding-left: 5px;
+                    font-style: italic;
+                    z-index: 5;
+                }
+            }
+
+            a.note {
+                font-size: 20%;
+                display: block;
+            }
+
+            div.block {
+                border: 1px solid white;
+                border-radius: 10px;
+                margin: 10px;
+                display: inline-block;
+                padding: 5px;
+                padding-left: 10px;
+                padding-right: 10px;
+                background-color: rgba(0,0,0, 0.2);
+            }
+        </style>
+         <style type="text/css">
+                    table, th, td {
+                      border: 1px solid white;
+                    }
+                </style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+                <section>
+                    <h1>Regularization</h1>
+                    <h1>Model Selection</h1>
+                    <h1>Troubleshooting</h1>
+                </section>
+
+                <section>
+                    <div class="block">CS BA</div>
+                    <div class="block">C++</div>
+                    <div class="block">Data Science</div>
+                    <hr>
+                    <div class="block">Drawing</div>
+                    <div class="block">Khan Academy</div>
+                    <div class="block">Driving</div>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>The Problem</h1>
+                        <p>Let’s say we want to solve the housing pricing problem.</p>
+                        <p>I.e. using the <b>set of features</b> we want to predict house <b>price</b>.</p>
+                    </section>
+                    <section>
+                        <p>The features might be:</p>
+                        <ul>
+                            <li>House size (area)</li>
+                            <li>Number of rooms</li>
+                            <li>Year built</li>
+                            <li>etc.</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Approach</h1>
+                        <p>One way to solve the broblem is to use<br><b>Linear regression</b></p>
+                    </section>
+                    <section>
+                        <script type="math/tex; mode=display">
+                        \hat{y} = \hat{\beta_0} + \hat{\beta_1} x_1 + \hat{\beta_2} x_2 + ... + \hat{\beta_p} x_p
+                        </script>
+                    </section>
+                    <section>
+                        <script type="math/tex; mode=display">
+                            RSS = \sum_{i=1}^{n} (y_i - \hat{y_i})^2
+                        </script>
+                    </section>
+                    <section>
+                        <script type="math/tex; mode=display">
+                            RSS = \sum_{i=1}^{n} (y_i - \hat{\beta_0} - \hat{\beta_1}x_{i1} - \hat{\beta_2}x_{i2} - ... - \hat{\beta_p}x_{ip})^2
+                        </script>
+                    </section>
+                    <section>
+                        <h1>R-Statistic</h1>
+                        <script type="math/tex; mode=display">
+                            R^2 = \frac{TSS - RSS}{TSS} = 1 - \frac{RSS}{TSS}
+                        </script>
+                        <script type="math/tex; mode=display">
+                            TSS = \sum (y_i - \bar{y_i})^2
+                        </script>
+                    </section>
+                    <section>
+                        <p>R<sup>2</sup> measures the proportion of variability in Y that can be explained using X</p>
+                    </section>
+                    <section>
+                        <p>R<sup>2</sup> takes values [0..1]</p>
+                    </section>
+                </section>
+
+                <section>
+                    <h1>The issue</h1>
+                    <p>We got R<sup>2</sup> = 0.76 which is too low.</p>
+                    <p>We want to be as close to 1 as possible.</p>
+                    <p>What to do?</p>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Fixing the problem</h1>
+
+                        <table style="width:100%;font-size: xx-large;">
+                          <tr>
+                            <th>Option</th>
+                            <!-- <th>What Fixes</th> -->
+                          </tr>
+                          <tr>
+                            <td>Try getting more training examples</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Try a smaller set of features</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Try a larger set of features</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Try changing the features: replacing the location with CO2 values for the region</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Run gradient descent for more iterations</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Use a different value for <i>lambda</i> in regularization</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                          <tr>
+                            <td>Try using another type of model</td>
+                            <!-- <td>?</td> -->
+                          </tr>
+                        </table>
+                    </section>
+
+                    <section>
+                        <p>This approach might work, but it's very time-consuming, and largely a matter of luck whether you end up fixing what the problem really is.</p>
+                    </section>
+                    <section>
+                        <p>What can we do then?</p>
+                    </section>
+                </section>
+
+                <section>
+                    <h1>Better approach</h1>
+                    <ul>
+                        <li>Run diagnostics to figure out what the problem is</li>
+                        <li>Fix whatever the problem is</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Suppose</h1>
+                        <h2>you suspect the problem is either</h2>
+                        <ul>
+                            <li>Overfitting (high variance)</li>
+                            <li>Too few features to predict correct price (high bias)</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <img class="stretch" src="images/reg_bv_loop.png">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Bias-Variance trade-off</h1>
+                        <img class="stretch" src="images/bv-tradeoff-big.png">
+                    </section>
+
+                    <section>
+                        <img class="stretch" src="images/bvt-01.png">
+                    </section>
+
+                    <section>
+                        <img class="stretch" src="images/bvt-02.png">
+                    </section>
+
+                    <section>
+                        <img class="stretch" src="images/bvt-03.png">
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Debug with loss function</h1>
+                        <h9>training (blue), validation (red)</h9>
+                        <img class="stretch" src="images/debug-losses.png">
+                    </section>
+                    <section>
+                        <img class="stretch" src="images/debug-losses-01.png">
+                        <p>Training and validation losses do not decrease, the model is not learning due to no information in the data or insufficient capacity of the model. <b>Underfitting</b>.</p>
+                    </section>
+                    <section>
+                        <img class="stretch" src="images/debug-losses-02.png">
+                        <p>Training loss decreases while validation increases. <b>Overfitting</b>.</p>
+                    </section>
+                    <section>
+                        <img class="stretch" src="images/debug-losses-03.png">
+                        <p>Training and validation losses decrease exactly in tandem, performance may be improved further as model is not at the limit of overfitting.</p>
+                    </section>
+                    <section>
+                        <img class="stretch" src="images/debug-losses-04.png">
+                        <p>Training and validation losses have different absolute values but similar trends, overfitting is under control.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>How can we address overfitting?</h1>
+                        <ul>
+                            <li>Reduce the number of features</li>
+                            <li>Use regularization</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <p>Reducing number of features might work only on simple datasets, around <100 features.</p>
+                        <p>A bit more tricky for deep learning models.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Regularization</h1>
+                        <p>This is a technique, that constrains/regularizes or shrinks the coefficient estimates towards zero. In other words, this technique discourages learning a more complex or flexible model, so as to avoid the risk of overfitting.</p>
+                    </section>
+                    <section>
+                        <p>Basically it is an additional penalty factor for parameters.</p>
+                    </section>
+
+                    <section>
+                        <h1>Intuition</h1>
+                    </section>
+
+                    <section>
+                        <p>Reminder</p>
+                        <script type="math/tex; mode=display">
+                            RSS = \sum_{i=1}^{n} (y_i - \hat{y_i})^2
+                        </script>
+                    </section>
+
+
+                    <section>
+                        <img class="stretch" src="images/bv-tradeoff-big.png">
+                        <script type="math/tex; mode=display">
+                            RSS = \sum_{i=1}^{n} (y_i - \hat{y_i})^2 + 1000 \cdot \beta_3 + 1000 \cdot + \beta_4
+                        </script>
+                    </section>
+
+                    <section>
+                        <h1>As a result</h1>
+                        <script type="math/tex; mode=display">
+                             \beta_3 \approx 0, \beta_4 \approx 0
+                        </script>
+
+                        Previous model
+                        <script type="math/tex; mode=display">
+                             \beta_0 + \beta_1 x + \beta_2 x^2 + \beta_3 x^3 + \beta_4 x^4
+                        </script>
+
+                        Becomes
+
+                        <script type="math/tex; mode=display">
+                             \beta_0 + \beta_1 x + \beta_2 x^2
+                        </script>
+
+                    </section>
+
+                    <section>
+                        <h1>Regularization</h1>
+                        <script type="math/tex; mode=display">
+                            J(\beta) = RSS + \lambda \sum_{i=1}^{n} \beta_{j}^n
+                        </script>
+                    </section>
+
+                    <section>
+                        <script type="math/tex; mode=display">
+                            J(\beta) = \sum_{i=1}^{n} (y_i - \hat{y_i})^2 + \lambda \sum_{i=1}^{n} \beta_{j}^n
+                        </script>
+                        <p>Lambda is a regularization term</p>
+                    </section>
+
+                    <section>
+                        <ul>
+                            <li>Keep all the features, but reduce magnitude/values of parameter</li>
+                            <li>Works well when we have a lot of features, each of which contributes a bit to predicting y</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h1>As a result</h1>
+                        <ul>
+                            <li>"Simpler" hypothesis</li>
+                            <li>Less prone to overfitting</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <h1>Fixing the problem</h1>
+
+                    <table style="width:100%;font-size: xx-large;">
+                      <tr>
+                        <th>Option</th>
+                        <th>What Fixes</th>
+                      </tr>
+                      <tr>
+                        <td>Get more training examples</td>
+                        <td>High Variance</td>
+                      </tr>
+                      <tr>
+                        <td>Try a smaller set of features</td>
+                        <td>High Variance</td>
+                      </tr>
+                      <tr>
+                        <td>Try getting additional features</td>
+                        <td>High bias</td>
+                      </tr>
+                      <tr>
+                        <td>Decreasing <i>lambda</i></td>
+                        <td>High bias</td>
+                      </tr>
+                      <tr>
+                        <td>Decreasing <i>lambda</i></td>
+                        <td>High viriance</td>
+                      </tr>
+                    </table>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Model Selection</h1>
+                    </section>
+
+                    <section>
+                        <h1>Train</h1>
+                        <img class="stretch" src="images/dataset_split-100.png">
+                        <p>What good, what bad about that?</p>
+                    </section>
+
+                    <section>
+                        <h1>Train-Val</h1>
+                        <img class="stretch" src="images/dataset_split-70-30.png">
+                        <p>What good, what bad about that?</p>
+                    </section>
+
+                    <section>
+                        <h1>Train-Val-Test</h1>
+                        <img class="stretch" src="images/dataset_split-60-20-20.png">
+                        <p>What good, what bad about that?</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Ablative Analysis</h1>
+                        <p>Suppose that you’ve build a good anti-spam classifier by adding lots of clever features to logistic regression</p>
+
+                        <table style="font-size: xx-large;">
+                          <tr>
+                            <th>Component</th>
+                          </tr>
+                          <tr>
+                            <td>Spelling correction</td>
+                          </tr>
+                          <tr>
+                            <td>Sender host features</td>
+                          </tr>
+                          <tr>
+                            <td>Email header features</td>
+                          </tr>
+                          <tr>
+                            <td>Email text parser features</td>
+                          </tr>
+                          <tr>
+                            <td>Javascript parser</td>
+                          </tr>
+                          <tr>
+                            <td>Features from embedded images</td>
+                          </tr>
+                        </table>
+                    </section>
+
+                    <section>
+                        <p>Simple logistic regression without any clever features get 94% performance.</p>
+                        <p>Just what accounts for your improvement from 94 to 99.9%?</p>
+                    </section>
+                    <section>
+                        <h1>Ablative analysis</h1>
+                        <p>Remove components from your system one at a time, to see how it breaks.</p>
+                    </section>
+
+                    <section>
+                        <table style="font-size: xx-large;">
+                          <tr>
+                            <th>Component</th>
+                            <th>Accuracy (%)</th>
+                          </tr>
+                          <tr>
+                            <td>Overall System</td>
+                            <td>99.9</td>
+                          </tr>
+                          <tr>
+                            <td>Spelling correction</td>
+                            <td>99.0</td>
+                          </tr>
+                          <tr>
+                            <td>Sender host features</td>
+                            <td>98.9</td>
+                          </tr>
+                          <tr>
+                            <td>Email header features</td>
+                            <td>98.9</td>
+                          </tr>
+                          <tr>
+                            <td>Email text parser features</td>
+                            <td>95</td>
+                          </tr>
+                          <tr>
+                            <td>Javascript parser</td>
+                            <td>95.5</td>
+                          </tr>
+                          <tr>
+                            <td>Features from embedded images</td>
+                            <td>94.0</td>
+                          </tr>
+                        </table>
+
+                        <p>Conclusion: The email text parser features account for most of the improvement.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h1>Piece of advice on diagnostics</h1>
+                    </section>
+                    <section>
+                        <p>Understanding your application problem: If you are working on one important ML application for months/years, it's very valuable for you personally to get a intuitive understand what works and what does not work in your problem.</p>
+                    </section>
+                    <section>
+                        <p>Writing research papers: Diagnostics and error analysis help convey insight about the problem, and justify your research claims.</p>
+                    </section>
+                    <section>
+                        <p>Rather than saying "Here is an algorithm that works," it is more interesting to say “Here is an algorithm that works because of component X, and here is my justification."</p>
+                    </section>
+                </section>
+
+
+                <section><h1>References</h1>
+                    <ul>
+                        <li><a href="https://towardsdatascience.com/regularization-in-machine-learning-76441ddcf99a">Regularization in Machine Learning</a></li>
+                        <li><a href="https://www.youtube.com/playlist?list=PLLssT5z_DsK-h9vYZkQkYNWcItqhlRJLN">Andre Ng's ML cource, sections 7, 10</a></li>
+                        <li><a href="https://www.manning.com/books/deep-learning-with-pytorch">Deep Learning with PyTorch</a></li>
+                        <li><a href="http://faculty.marshall.usc.edu/gareth-james/ISL/">Introduction To Statistical Learning</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Cheers!</h1>
+                </section>
+
+                <section>
+                    <img class="stretch" src="images/qr_link.png">
+                </section>
+
+			</div>
+
+		</div>
+
+		<script src="reveal_js/js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'reveal_js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal_js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal_js/plugin/highlight/highlight.js', async: true },
+					{ src: 'reveal_js/plugin/search/search.js', async: true },
+					{ src: 'reveal_js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'reveal_js/plugin/notes/notes.js', async: true },
+                    { src: 'reveal_js/plugin/math/math.js', async: true }
+				]
+			});
+
+		</script>
+	</body>
+</html>
